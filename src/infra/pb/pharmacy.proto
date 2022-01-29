@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+message Pharmacy {
+  string id = 1;
+  string is_subsidiary_of = 2;
+  string logo = 3;
+  string name = 4;
+  string contact_phone = 5;
+  string document_number = 6;
+  string city = 7;
+  string street = 8;
+  string number = 9;
+  string opens_from = 10;
+  string opens_until = 11;
+}
+
+message PharmacyList {
+  uint64 count = 1;
+  repeated Pharmacy pharmacies = 2;
+}
+
+message nonGeneratedPharmacyDTO {
+  string is_subsidiary_of = 1;
+  string logo = 2;
+  string name = 3;
+  string contact_phone = 4;
+  string document_number = 5;
+  string city = 6;
+  string street = 7;
+  string number = 8;
+  string opens_from = 9;
+  string opens_until = 10;
+}
+
+message listAllPharmaciesDTO {
+  uint32 currentPage = 1;
+  uint32 pageSize = 2;
+}
+
+message idOnlyDTO {
+  string id = 1;
+}
+
+service PharmacyService {
+  rpc listAllPharmacies(listAllPharmaciesDTO) returns (PharmacyList);
+  rpc showPharmacy(idOnlyDTO) returns (Pharmacy);
+  rpc createPharmacy(nonGeneratedPharmacyDTO) returns (Pharmacy);
+  rpc updatePharmacy(nonGeneratedPharmacyDTO) returns (Pharmacy);
+  rpc deletePharmacy(idOnlyDTO) returns (Pharmacy);
+}
