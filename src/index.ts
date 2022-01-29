@@ -22,10 +22,7 @@ const loadProto = () => {
   };
 
   return loadPackageDefinition(
-    loadSync(
-      path.resolve(__dirname, "src", "infra", "pb", "pharmacy.proto"),
-      options
-    )
+    loadSync(path.resolve(__dirname, "infra", "pb", "pharmacy.proto"), options)
   );
 };
 
