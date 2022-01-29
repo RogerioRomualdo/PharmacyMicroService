@@ -17,8 +17,8 @@ const distConfig = {
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  entities: ["./dist/infra/database/models/*{.ts,.js}"],
-  migrations: ["./dist/infra/database/migrations/*{.ts,.js}"],
+  entities: ["./dist/src/infra/database/models/*{.ts,.js}"],
+  migrations: ["./dist/src/infra/database/migrations/*{.ts,.js}"],
   cli: {
     migrationsDir: "src/infra/database/migrations",
   },
