@@ -27,10 +27,10 @@ export class Pharmacy {
   number: string;
 
   @Column()
-  opens_from: string;
+  open_time: string;
 
   @Column()
-  opens_until: string;
+  close_time: string;
 
   @ManyToOne(() => Pharmacy, ({ id }) => id, {
     nullable: true,
