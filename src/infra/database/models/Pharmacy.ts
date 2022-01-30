@@ -37,5 +37,5 @@ export class Pharmacy {
     onDelete: "SET NULL",
     onUpdate: "CASCADE",
   })
-  is_subsidiary_of: string;
+  is_subsidiary_of?: string;
 }
