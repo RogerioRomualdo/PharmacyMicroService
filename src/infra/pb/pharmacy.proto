@@ -2,16 +2,16 @@ syntax = "proto3";
 
 message Pharmacy {
   string id = 1;
-  string is_subsidiary_of = 2;
+  string isSubsidiaryOf = 2;
   string logo = 3;
   string name = 4;
-  string contact_phone = 5;
-  string document_number = 6;
+  string contactPhone = 5;
+  string documentNumber = 6;
   string city = 7;
   string street = 8;
   string number = 9;
-  string open_time = 10;
-  string close_time = 11;
+  string openTime = 10;
+  string closeTime = 11;
 }
 
 message PharmacyList {
@@ -20,16 +20,16 @@ message PharmacyList {
 }
 
 message NonGeneratedPharmacyDTO {
-  string is_subsidiary_of = 1;
+  string issubsidiaryOf = 1;
   string logo = 2;
   string name = 3;
-  string contact_phone = 4;
-  string document_number = 5;
+  string contactPhone = 4;
+  string documentNumber = 5;
   string city = 6;
   string street = 7;
   string number = 8;
-  string open_time = 9;
-  string close_time = 10;
+  string openTime = 9;
+  string closeTime = 10;
 }
 
 message ListAllPharmaciesParamsDTO {

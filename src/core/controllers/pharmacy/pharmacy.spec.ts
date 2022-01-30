@@ -58,7 +58,7 @@ describe("Pharmacy Controller", () => {
   });
 
   describe("Showing a pharmacy", () => {
-    const call = { request: { pharmacyId: "any_pharmacy_id" } };
+    const call = { request: { pharmacyId: "anyPharmacyId" } };
 
     it("should return a pharmacy", async () => {
       const pharmacy = returnAValidPharmacy();
@@ -113,7 +113,7 @@ describe("Pharmacy Controller", () => {
   });
 
   describe("Deleting pharmacies", () => {
-    const call = { request: { pharmacyId: "any_pharmacy_id" } };
+    const call = { request: { pharmacyId: "anyPharmacyId" } };
 
     it("should delete a pharmacy", async () => {
       MockPharmacyService.delete.mockReturnValue(

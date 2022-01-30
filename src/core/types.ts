@@ -1,15 +1,15 @@
 export interface Pharmacy {
   id: string;
-  is_subsidiary_of?: string;
+  isSubsidiaryOf?: string;
   logo: string;
   name: string;
-  contact_phone: string;
-  document_number: string;
+  contactPhone: string;
+  documentNumber: string;
   city: string;
   street: string;
   number: string;
-  open_time: string;
-  close_time: string;
+  openTime: string;
+  closeTime: string;
 }
 
 export type PharmacyDTO = Omit<Pharmacy, "id">;

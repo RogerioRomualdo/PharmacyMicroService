@@ -12,10 +12,10 @@ export class Pharmacy {
   name: string;
 
   @Column()
-  contact_phone: string;
+  contactPhone: string;
 
   @Column()
-  document_number: string;
+  documentNumber: string;
 
   @Column()
   city: string;
@@ -27,15 +27,15 @@ export class Pharmacy {
   number: string;
 
   @Column()
-  open_time: string;
+  openTime: string;
 
   @Column()
-  close_time: string;
+  closeTime: string;
 
   @ManyToOne(() => Pharmacy, ({ id }) => id, {
     nullable: true,
     onDelete: "SET NULL",
     onUpdate: "CASCADE",
   })
-  is_subsidiary_of?: string;
+  isSubsidiaryOf?: string;
 }
