@@ -10,8 +10,8 @@ message Pharmacy {
   string city = 7;
   string street = 8;
   string number = 9;
-  string opens_from = 10;
-  string opens_until = 11;
+  string open_time = 10;
+  string close_time = 11;
 }
 
 message PharmacyList {
@@ -19,7 +19,7 @@ message PharmacyList {
   repeated Pharmacy pharmacies = 2;
 }
 
-message nonGeneratedPharmacyDTO {
+message NonGeneratedPharmacyDTO {
   string is_subsidiary_of = 1;
   string logo = 2;
   string name = 3;
@@ -28,23 +28,25 @@ message nonGeneratedPharmacyDTO {
   string city = 6;
   string street = 7;
   string number = 8;
-  string opens_from = 9;
-  string opens_until = 10;
+  string open_time = 9;
+  string close_time = 10;
 }
 
-message listAllPharmaciesDTO {
+message ListAllPharmaciesParamsDTO {
   uint32 currentPage = 1;
   uint32 pageSize = 2;
 }
 
-message idOnlyDTO {
+message PharmacyId {
   string id = 1;
 }
 
+message Void {}
+
 service PharmacyService {
-  rpc listAllPharmacies(listAllPharmaciesDTO) returns (PharmacyList);
-  rpc showPharmacy(idOnlyDTO) returns (Pharmacy);
-  rpc createPharmacy(nonGeneratedPharmacyDTO) returns (Pharmacy);
-  rpc updatePharmacy(nonGeneratedPharmacyDTO) returns (Pharmacy);
-  rpc deletePharmacy(idOnlyDTO) returns (Pharmacy);
+  rpc listAllPharmacies(ListAllPharmaciesParamsDTO) returns (PharmacyList);
+  rpc showPharmacy(PharmacyId) returns (Pharmacy);
+  rpc createPharmacy(NonGeneratedPharmacyDTO) returns (Pharmacy);
+  rpc updatePharmacy(NonGeneratedPharmacyDTO) returns (Pharmacy);
+  rpc deletePharmacy(PharmacyId) returns (Void);
 }
