@@ -47,6 +47,6 @@ service PharmacyService {
   rpc listAllPharmacies(ListAllPharmaciesParamsDTO) returns (PharmacyList);
   rpc showPharmacy(PharmacyId) returns (Pharmacy);
   rpc createPharmacy(NonGeneratedPharmacyDTO) returns (Pharmacy);
-  rpc updatePharmacy(NonGeneratedPharmacyDTO) returns (Pharmacy);
+  rpc updatePharmacy(Pharmacy) returns (Pharmacy);
   rpc deletePharmacy(PharmacyId) returns (Void);
 }
