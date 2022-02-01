@@ -13,7 +13,7 @@ export class PharmacyController implements IPharmacyController {
     return callback(null, pharmacyList);
   };
   showPharmacy = async (call: Record<string, any>, callback: Callback) => {
-    const { pharmacyId } = call.request;
+    const { id: pharmacyId } = call.request;
 
     const pharmacy = await this.pharmacyService.show(pharmacyId);
 
@@ -31,7 +31,7 @@ export class PharmacyController implements IPharmacyController {
     return callback(null, pharmacy);
   };
   updatePharmacy = async (call: Record<string, any>, callback: Callback) => {
-    const { pharmacyId, ...pharmacyData } = call.request;
+    const { id: pharmacyId, ...pharmacyData } = call.request;
 
     const pharmacy = await this.pharmacyService.update(
       pharmacyId,
