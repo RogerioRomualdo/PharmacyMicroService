@@ -21,8 +21,7 @@ This pharmacy Micro Service manages Pharmacies and it's Subsidiaries while commu
 - **TDD** as the chosen design pattern
 - **TypeORM** as the chosen ORM because of it's integration with typescript
 
-## How to run it
+## Final notes
 
-```
-This section is still under construction
-```
+Didn't make it in time so i froze what i was doing and upped it to a new branch (<a href=https://github.com/RogerioRomualdo/PharmacyMicroService/tree/late>late</a>).  
+Was doing the communication between the two micro services via GRPC
