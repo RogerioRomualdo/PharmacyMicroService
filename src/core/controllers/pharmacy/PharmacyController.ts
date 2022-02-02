@@ -43,7 +43,7 @@ export class PharmacyController implements IPharmacyController {
     return callback(null, pharmacy);
   };
   deletePharmacy = async (call: Record<string, any>, callback: Callback) => {
-    const { pharmacyId } = call.request;
+    const { id: pharmacyId } = call.request;
 
     const error = await this.pharmacyService.delete(pharmacyId);
 
