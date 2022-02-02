@@ -9,9 +9,6 @@ export class Validator {
       exceptions.includes(key) ? false : !value
     ).map(([key]) => key);
 
-    console.log(exceptions);
-    console.log(falsyFields);
-
     if (falsyFields.length === 0) return null;
 
     const errorMessage =

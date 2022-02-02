@@ -20,9 +20,7 @@ export class PharmacyService implements IPharmacyService {
     return await this.pharmacyRepository.create(pharmacyData);
   };
   index = async (options: paginationOptions) => {
-    const jooj = await this.pharmacyRepository.index(options);
-    console.log(jooj);
-    return jooj;
+    return await this.pharmacyRepository.index(options);
   };
   update = async (pharmacyId: string, pharmacyData: Partial<PharmacyDTO>) => {
     const validationError = this.validator.ValidateFalsyFields(pharmacyData, [
