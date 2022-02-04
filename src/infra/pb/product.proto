@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+message Product {
+  string id = 1;
+  string thumbnail = 2;
+  string name = 3;
+  uint32 price = 4;
+  uint64 volume = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+}
+
+message ProductIds {
+  repeated string productIds = 1;
+}
+
+message ProductList {
+  uint64 count = 1;
+  repeated Product products = 2;
+}
+
+message NonGeneratedProductDTO {
+  string thumbnail = 1;
+  string name = 2;
+  uint32 price = 3;
+  uint64 volume = 4;
+  string createdAt = 5;
+  string updatedAt = 6;
+}
+
+message ListAllProductsParamsDTO {
+  uint32 currentPage = 1;
+  uint32 pageSize = 2;
+}
+
+message ProductId {
+  string id = 1;
+}
+
+message Void {}
+
+service ProductService {
+  rpc listAllProducts(ListAllProductsParamsDTO) returns (ProductList);
+  rpc showProduct(ProductId) returns (Product);
+  rpc createProduct(NonGeneratedProductDTO) returns (Product);
+  rpc updateProduct(Product) returns (Product);
+  rpc deleteProduct(ProductId) returns (Void);
+  rpc getProductsByIds(ProductIds) returns (ProductList);
+}
