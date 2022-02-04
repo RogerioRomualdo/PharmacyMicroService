@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+} from "typeorm";
+import { PharmacyProducts } from "./PharmacyProducts";
 
 @Entity("pharmacy")
 export class Pharmacy {
@@ -38,4 +45,9 @@ export class Pharmacy {
     onUpdate: "CASCADE",
   })
   isSubsidiaryOf?: string;
+
+  @OneToMany(() => PharmacyProducts, ({ pharmacy }) => pharmacy, {
+    cascade: true,
+  })
+  pharmacyProducts: PharmacyProducts[];
 }
