@@ -50,7 +50,10 @@ export class PharmacyService implements IPharmacyService {
       ({ productId }) => productId
     );
 
-    const products = await this.productsClient.getProductsByIds(productIds);
+    const products =
+      productIds.length > 0
+        ? await this.productsClient.getProductsByIds(productIds)
+        : { count: 0, products: [] };
 
     return {
       ...pharmacy,
