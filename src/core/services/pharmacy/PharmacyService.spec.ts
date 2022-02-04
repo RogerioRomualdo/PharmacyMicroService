@@ -3,23 +3,56 @@ import {
   Pharmacy,
   PharmacyDTO,
   PharmacyList,
+  Product,
 } from "../../types";
+import { Pharmacy as PharmacyEntity } from "../../../infra/database/models/Pharmacy";
 import { PharmacyService } from "./PharmacyService";
-import { returnAValidPharmacy } from "../../../utils/test";
+import { returnAValidEntity, returnAValidPharmacy } from "../../../utils/test";
+import { PharmacyProducts } from "../../../infra/database/models/PharmacyProducts";
+import { ProductList } from "../../gateways/products/IProducts";
 
 describe("Pharmacy service", () => {
   const MockPhramacyRepository = {
     index: jest.fn<Promise<PharmacyList>, [options: paginationOptions]>(),
-    findById: jest.fn<Promise<Pharmacy | undefined>, [pharmacyId: string]>(),
+    findById: jest.fn<
+      Promise<PharmacyEntity | undefined>,
+      [pharmacyId: string]
+    >(),
     create: jest.fn<Promise<Pharmacy>, [pharmacyData: PharmacyDTO]>(),
     update: jest.fn<
       Promise<Pharmacy>,
       [pharmacyId: string, pharmacyData: Partial<PharmacyDTO>]
     >(),
     delete: jest.fn<Promise<void>, [phramacyId: string]>(),
+    linkProductsToPharmacy: jest.fn<
+      Promise<PharmacyEntity | Error>,
+      [pharmacyId: string, productIds: Array<string>]
+    >(),
   };
 
-  const pharmacyService = new PharmacyService(MockPhramacyRepository);
+  const MockProductClient = {
+    getProductsByIds: jest.fn<
+      Promise<ProductList>,
+      [productIds: Array<string>]
+    >(),
+  };
+
+  const MockPharmacyProductsRepository = {
+    linkProductsToPharmacy: jest.fn<
+      Promise<void>,
+      [pharmacy: PharmacyEntity, productIds: Array<string>]
+    >(),
+    getAllProductsLinkedToPharmacy: jest.fn<
+      Promise<Array<PharmacyProducts>>,
+      [pharmacy: Pharmacy]
+    >(),
+  };
+
+  const pharmacyService = new PharmacyService(
+    MockPhramacyRepository,
+    MockProductClient,
+    MockPharmacyProductsRepository
+  );
 
   it("should be defined", () => {
     expect(pharmacyService).toBeDefined();
@@ -186,6 +219,187 @@ describe("Pharmacy service", () => {
       expect(returnedValue).toBeInstanceOf(Error);
       expect(MockPhramacyRepository.findById).toBeCalledTimes(1);
       expect(MockPhramacyRepository.delete).toBeCalledTimes(0);
+    });
+  });
+
+  describe("Linking products to a pharmacy", () => {
+    const validPharmacy = returnAValidPharmacy();
+    const productIds = Array(5).fill(Math.random().toString());
+    const productList = {
+      count: 5,
+      products: Array<Product>(5).fill(returnAValidEntity("product")),
+    };
+
+    it("should link all products to a pharmacy", async () => {
+      MockPhramacyRepository.findById.mockReturnValue(
+        new Promise((resolve) => resolve(validPharmacy))
+      );
+
+      MockPharmacyProductsRepository.getAllProductsLinkedToPharmacy.mockReturnValue(
+        new Promise((resolve) => resolve([]))
+      );
+
+      MockProductClient.getProductsByIds.mockReturnValue(
+        new Promise((resolve) => resolve(productList))
+      );
+
+      MockPharmacyProductsRepository.linkProductsToPharmacy.mockReturnValue(
+        new Promise((resolve) => resolve())
+      );
+
+      const pharmacyWithProducts = await pharmacyService.linkProductsToPhramacy(
+        validPharmacy.id,
+        productIds
+      );
+
+      expect(pharmacyWithProducts).not.toBeInstanceOf(Error);
+      if (pharmacyWithProducts instanceof Error) return;
+
+      expect(pharmacyWithProducts.products).toHaveLength(productIds.length);
+      expect(pharmacyWithProducts.id).toEqual(validPharmacy.id);
+
+      expect(MockPhramacyRepository.findById).toBeCalledTimes(1);
+      expect(
+        MockPharmacyProductsRepository.getAllProductsLinkedToPharmacy
+      ).toBeCalledTimes(1);
+      expect(MockProductClient.getProductsByIds).toBeCalledTimes(1);
+      expect(
+        MockPharmacyProductsRepository.linkProductsToPharmacy
+      ).toBeCalledTimes(1);
+    });
+
+    it("should link some products to a pharmacy", async () => {
+      MockPhramacyRepository.findById.mockReturnValue(
+        new Promise((resolve) => resolve(validPharmacy))
+      );
+
+      MockPharmacyProductsRepository.getAllProductsLinkedToPharmacy.mockReturnValue(
+        new Promise((resolve) =>
+          resolve([
+            {
+              id: "anyPharmacyProductId",
+              productId: "specificProductId",
+              pharmacy: returnAValidPharmacy(),
+              unitsInStock: 0,
+            },
+          ])
+        )
+      );
+
+      MockProductClient.getProductsByIds.mockReturnValue(
+        new Promise((resolve) => resolve(productList))
+      );
+
+      MockPharmacyProductsRepository.linkProductsToPharmacy.mockReturnValue(
+        new Promise((resolve) => resolve())
+      );
+
+      const pharmacyWithProducts = await pharmacyService.linkProductsToPhramacy(
+        validPharmacy.id,
+        [...productIds, "specificProductId"]
+      );
+
+      expect(pharmacyWithProducts).not.toBeInstanceOf(Error);
+      if (pharmacyWithProducts instanceof Error) return;
+
+      expect(pharmacyWithProducts.products).toHaveLength(productIds.length);
+      expect(pharmacyWithProducts.id).toEqual(validPharmacy.id);
+
+      expect(MockPhramacyRepository.findById).toBeCalledTimes(1);
+      expect(
+        MockPharmacyProductsRepository.getAllProductsLinkedToPharmacy
+      ).toBeCalledTimes(1);
+      expect(MockProductClient.getProductsByIds).toBeCalledTimes(1);
+      expect(
+        MockPharmacyProductsRepository.linkProductsToPharmacy
+      ).toBeCalledTimes(1);
+    });
+
+    it("shouldn't link products to a pharmacy (pharmacy not found)", async () => {
+      MockPhramacyRepository.findById.mockReturnValue(
+        new Promise((resolve) => resolve(undefined))
+      );
+
+      const pharmacyWithProducts = await pharmacyService.linkProductsToPhramacy(
+        validPharmacy.id,
+        productIds
+      );
+
+      expect(pharmacyWithProducts).toBeInstanceOf(Error);
+
+      expect(MockPhramacyRepository.findById).toBeCalledTimes(1);
+      expect(
+        MockPharmacyProductsRepository.getAllProductsLinkedToPharmacy
+      ).toBeCalledTimes(0);
+      expect(MockProductClient.getProductsByIds).toBeCalledTimes(0);
+      expect(
+        MockPharmacyProductsRepository.linkProductsToPharmacy
+      ).toBeCalledTimes(0);
+    });
+
+    it("shouldn't link products to a pharmacy (all products are already linked)", async () => {
+      MockPhramacyRepository.findById.mockReturnValue(
+        new Promise((resolve) => resolve(validPharmacy))
+      );
+
+      MockPharmacyProductsRepository.getAllProductsLinkedToPharmacy.mockReturnValue(
+        new Promise((resolve) =>
+          resolve([
+            {
+              id: "anyPharmacyProductId",
+              productId: "sameIdAsAllOthersProducts",
+              pharmacy: returnAValidPharmacy(),
+              unitsInStock: 0,
+            },
+          ])
+        )
+      );
+
+      const pharmacyWithProducts = await pharmacyService.linkProductsToPhramacy(
+        validPharmacy.id,
+        Array(5).fill("sameIdAsAllOthersProducts")
+      );
+
+      expect(pharmacyWithProducts).toBeInstanceOf(Error);
+
+      expect(MockPhramacyRepository.findById).toBeCalledTimes(1);
+      expect(
+        MockPharmacyProductsRepository.getAllProductsLinkedToPharmacy
+      ).toBeCalledTimes(1);
+      expect(MockProductClient.getProductsByIds).toBeCalledTimes(0);
+      expect(
+        MockPharmacyProductsRepository.linkProductsToPharmacy
+      ).toBeCalledTimes(0);
+    });
+
+    it("shouldn't link products to a pharmacy (all products are invalid)", async () => {
+      MockPhramacyRepository.findById.mockReturnValue(
+        new Promise((resolve) => resolve(validPharmacy))
+      );
+
+      MockPharmacyProductsRepository.getAllProductsLinkedToPharmacy.mockReturnValue(
+        new Promise((resolve) => resolve([]))
+      );
+
+      MockProductClient.getProductsByIds.mockReturnValue(
+        new Promise((resolve) => resolve({ count: 0, products: [] }))
+      );
+
+      const pharmacyWithProducts = await pharmacyService.linkProductsToPhramacy(
+        validPharmacy.id,
+        productIds
+      );
+
+      expect(pharmacyWithProducts).toBeInstanceOf(Error);
+
+      expect(MockPhramacyRepository.findById).toBeCalledTimes(1);
+      expect(
+        MockPharmacyProductsRepository.getAllProductsLinkedToPharmacy
+      ).toBeCalledTimes(1);
+      expect(MockProductClient.getProductsByIds).toBeCalledTimes(1);
+      expect(
+        MockPharmacyProductsRepository.linkProductsToPharmacy
+      ).toBeCalledTimes(0);
     });
   });
 });
