@@ -6,6 +6,7 @@ import {
 } from "../../types";
 import { PharmacyController } from "./PharmacyController";
 import { returnAValidPharmacy } from "../../../utils/test";
+import { Pharmacy as PharmacyEntity } from "../../../infra/database/models/Pharmacy";
 
 describe("Pharmacy Controller", () => {
   const MockPharmacyService = {
@@ -17,6 +18,10 @@ describe("Pharmacy Controller", () => {
       [pharmacyId: string, pharmacyData: Partial<PharmacyDTO>]
     >(),
     delete: jest.fn<Promise<void | Error>, [pharmacyId: string]>(),
+    linkProductsToPhramacy: jest.fn<
+      Promise<PharmacyEntity | Error>,
+      [pharmacyId: string, products: Array<string>]
+    >(),
   };
 
   const pharmacyController = new PharmacyController(MockPharmacyService);
