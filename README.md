@@ -20,8 +20,3 @@ This pharmacy Micro Service manages Pharmacies and it's Subsidiaries while commu
 - Unit testing with **Jest**
 - **TDD** as the chosen design pattern
 - **TypeORM** as the chosen ORM because of it's integration with typescript
-
-## Final notes
-
-Didn't make it in time so i froze what i was doing and upped it to a new branch (<a href=https://github.com/RogerioRomualdo/PharmacyMicroService/tree/late>late</a>).  
-Was doing the communication between the two micro services via GRPC
