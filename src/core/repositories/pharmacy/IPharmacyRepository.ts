@@ -4,10 +4,11 @@ import {
   PharmacyDTO,
   PharmacyList,
 } from "../../types";
+import { Pharmacy as PharmacyEntity } from "../../../infra/database/models/Pharmacy";
 
 export interface IPharmacyRepository {
   index: (options: paginationOptions) => Promise<PharmacyList>;
-  findById: (pharmacyId: string) => Promise<Pharmacy | undefined>;
+  findById: (pharmacyId: string) => Promise<PharmacyEntity | undefined>;
   create: (pharmacyData: PharmacyDTO) => Promise<Pharmacy>;
   update: (
     pharmacyId: string,

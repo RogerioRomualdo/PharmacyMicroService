@@ -21,7 +21,10 @@ export class PharmacyRepository implements IPharmacyRepository {
     return { count, pharmacies };
   };
   findById = async (pharmacyId: string) => {
-    return await this.typeOrm.findOne({ where: { id: pharmacyId } });
+    return await this.typeOrm.findOne({
+      where: { id: pharmacyId },
+      relations: ["pharmacyProducts"],
+    });
   };
   create = async (pharmacyData: PharmacyDTO) => {
     return await this.typeOrm.save(pharmacyData);

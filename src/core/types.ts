@@ -12,6 +12,16 @@ export interface Pharmacy {
   closeTime: string;
 }
 
+export interface Product {
+  id: string;
+  thumbnail: string;
+  name: string;
+  price: number;
+  volume: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type PharmacyDTO = Omit<Pharmacy, "id">;
 
 export type PharmacyList = {
