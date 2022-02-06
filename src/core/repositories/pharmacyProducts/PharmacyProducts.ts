@@ -24,4 +24,9 @@ export class PharmacyProductsRepository implements IPharmacyProductsRepository {
   getAllProductsLinkedToPharmacy = async (pharmacy: Pharmacy) => {
     return await this.typeOrm.find({ where: { pharmacy } });
   };
+
+  unlinkProductFromAllPharmacies = async (productId: string) => {
+    console.log(productId);
+    await this.typeOrm.delete({ productId });
+  };
 }

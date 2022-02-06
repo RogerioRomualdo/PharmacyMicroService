@@ -12,3 +12,27 @@ services:
       - ./data/db:/var/lib/mysql
     ports:
       - $DB_PORT:3306
+    networks:
+      - pharmacyMicroService
+  service:
+    build: .
+    environment:
+      - DB_HOST = $DB_HOST
+      - DB_PORT = $DB_PORT
+      - DB_USER = $DB_USER
+      - DB_PASS = $DB_PASS
+      - DB_NAME = $DB_NAME
+      - APP_HOST = $APP_HOST
+      - APP_PORT = $APP_PORT
+      - MSPHARMACY_PORT = $MSPHARMACY_PORT
+    ports:
+      - $APP_PORT:$APP_PORT
+    volumes:
+      - ./data:/usr/app/data
+    networks:
+      - pharmacyMicroService
+    depends_on:
+      - db
+networks:
+  pharmacyMicroService:
+    driver: bridge

@@ -20,4 +20,5 @@ export interface IPharmacyService {
     pharmacyId: string,
     productIds: Array<string>
   ) => Promise<PharmacyEntity | Error>;
+  unlinkProductFromAllPharmacies: (productId: string) => Promise<void>;
 }

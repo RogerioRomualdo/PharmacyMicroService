@@ -9,4 +9,5 @@ export interface IPharmacyProductsRepository {
   getAllProductsLinkedToPharmacy: (
     pharmacy: Pharmacy
   ) => Promise<Array<PharmacyProducts>>;
+  unlinkProductFromAllPharmacies: (productId: string) => Promise<void>;
 }

@@ -17,4 +17,5 @@ export interface IPharmacyController {
   updatePharmacy: RpcFunction;
   deletePharmacy: RpcFunction;
   linkProductsToPharmacy: RpcFunction;
+  unlinkProductFromAllPharmacies: RpcFunction;
 }

@@ -23,6 +23,26 @@ export class PharmacyService implements IPharmacyService {
 
     if (validationError) return validationError;
 
+    if (pharmacyData.isSubsidiaryOf) {
+      const headOffice = await this.pharmacyRepository.findById(
+        pharmacyData.isSubsidiaryOf
+      );
+
+      if (!headOffice)
+        return new Error(
+          "Invalid head office (isSubsidiaryOf must be a valid pharmacyId)"
+        );
+
+      const subsidiaryCount = await this.pharmacyRepository.countSubsidiariesOf(
+        headOffice.id
+      );
+
+      if (subsidiaryCount >= 3)
+        return new Error("Each head office can only have up to 3 subsidiaries");
+    } else {
+      delete pharmacyData.isSubsidiaryOf;
+    }
+
     return await this.pharmacyRepository.create(pharmacyData);
   };
   index = async (options: paginationOptions) => {
@@ -39,6 +59,18 @@ export class PharmacyService implements IPharmacyService {
 
     if (!pharmacy) return new Error("Pharmacy not found");
 
+    if (pharmacyData.isSubsidiaryOf) {
+      const subsidiarieCount =
+        await this.pharmacyRepository.countSubsidiariesOf(
+          pharmacyData.isSubsidiaryOf
+        );
+
+      if (subsidiarieCount >= 3)
+        return new Error("Each head office can only have up to 3 subsidiaries");
+    } else {
+      delete pharmacyData.isSubsidiaryOf;
+    }
+
     return await this.pharmacyRepository.update(pharmacyId, pharmacyData);
   };
   show = async (pharmacyId: string) => {
@@ -50,18 +82,25 @@ export class PharmacyService implements IPharmacyService {
       ({ productId }) => productId
     );
 
-    const products =
+    const productList =
       productIds.length > 0
         ? await this.productsClient.getProductsByIds(productIds)
         : { count: 0, products: [] };
 
-    return {
-      ...pharmacy,
-      products: products.products.map((product, index) => ({
+    const productsWithUnitCount = productList.products.map(
+      (product, index) => ({
         ...product,
         units: pharmacy.pharmacyProducts[index].unitsInStock,
-      })),
+      })
+    );
+
+    const parsedPharmacy = {
+      ...pharmacy,
+      products: [...productsWithUnitCount],
+      isSubsidiaryOf: pharmacy?.isSubsidiaryOf,
     };
+
+    return parsedPharmacy;
   };
   delete = async (pharmacyId: string) => {
     const pharmacy = await this.pharmacyRepository.findById(pharmacyId);
@@ -113,5 +152,10 @@ export class PharmacyService implements IPharmacyService {
         units: 0,
       })),
     };
+  };
+  unlinkProductFromAllPharmacies = async (productId: string) => {
+    await this.pharmacyProductsRepository.unlinkProductFromAllPharmacies(
+      productId
+    );
   };
 }

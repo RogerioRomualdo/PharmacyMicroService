@@ -4,7 +4,7 @@ import { Pharmacy } from "../infra/database/models/Pharmacy";
 const defaultValues = {
   pharmacy: {
     id: "anyPharmacyId",
-    isSubsidiaryOf: null,
+    isSubsidiaryOf: undefined,
     logo: "anyUri",
     name: "anyPharmacyName",
     contactPhone: "anyPhone",

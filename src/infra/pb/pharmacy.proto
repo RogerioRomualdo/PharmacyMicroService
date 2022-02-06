@@ -27,7 +27,7 @@ message Product {
 
 message PharmacyWithProducts {
   string id = 1;
-  string isSubsidiaryOf = 2;
+  Pharmacy isSubsidiaryOf = 2;
   string logo = 3;
   string name = 4;
   string contactPhone = 5;
@@ -46,7 +46,7 @@ message PharmacyList {
 }
 
 message NonGeneratedPharmacyDTO {
-  string issubsidiaryOf = 1;
+  string isSubsidiaryOf = 1;
   string logo = 2;
   string name = 3;
   string contactPhone = 4;
@@ -63,7 +63,7 @@ message ListAllPharmaciesParamsDTO {
   uint32 pageSize = 2;
 }
 
-message PharmacyId {
+message IdOnly {
   string id = 1;
 }
 
@@ -76,9 +76,10 @@ message Void {}
 
 service PharmacyService {
   rpc listAllPharmacies(ListAllPharmaciesParamsDTO) returns (PharmacyList);
-  rpc showPharmacy(PharmacyId) returns (PharmacyWithProducts);
+  rpc showPharmacy(IdOnly) returns (PharmacyWithProducts);
   rpc createPharmacy(NonGeneratedPharmacyDTO) returns (Pharmacy);
   rpc updatePharmacy(Pharmacy) returns (Pharmacy);
-  rpc deletePharmacy(PharmacyId) returns (Void);
+  rpc deletePharmacy(IdOnly) returns (Void);
   rpc linkProductsToPharmacy(LinkProductsToPharmacyDTO) returns (PharmacyWithProducts);
+  rpc unlinkProductFromAllPharmacies(IdOnly) returns (Void);
 }

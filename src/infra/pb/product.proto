@@ -19,6 +19,15 @@ message ProductList {
   repeated Product products = 2;
 }
 
+message UpdatedProduct {
+  string id = 1;
+  string thumbnail = 2;
+  string name = 3;
+  uint32 price = 4;
+  uint64 volume = 5;
+  string updatedAt = 7;
+}
+
 message NonGeneratedProductDTO {
   string thumbnail = 1;
   string name = 2;
@@ -43,7 +52,7 @@ service ProductService {
   rpc listAllProducts(ListAllProductsParamsDTO) returns (ProductList);
   rpc showProduct(ProductId) returns (Product);
   rpc createProduct(NonGeneratedProductDTO) returns (Product);
-  rpc updateProduct(Product) returns (Product);
+  rpc updateProduct(Product) returns (UpdatedProduct);
   rpc deleteProduct(ProductId) returns (Void);
   rpc getProductsByIds(ProductIds) returns (ProductList);
 }

@@ -10,7 +10,7 @@ import {
 
 dotEnv.config();
 
-const port = 8087;
+const port = process.env.APP_PORT;
 
 const loadProto = () => {
   const options = {
@@ -37,7 +37,7 @@ createConnection()
     );
 
     server.bindAsync(
-      `${process.env.DB_HOST}:${port}`,
+      `${process.env.APP_HOST}:${port}`,
       ServerCredentials.createInsecure(),
       (error, port) => {
         if (error) return console.log(error);

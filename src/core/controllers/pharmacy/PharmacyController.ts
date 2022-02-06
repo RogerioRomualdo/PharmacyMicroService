@@ -92,4 +92,18 @@ export class PharmacyController implements IPharmacyController {
       return callback(e, null);
     }
   };
+  unlinkProductFromAllPharmacies = async (
+    call: Record<string, any>,
+    callback: Callback
+  ) => {
+    try {
+      const { id: productId } = call.request;
+
+      this.pharmacyService.unlinkProductFromAllPharmacies(productId);
+
+      callback(null, null);
+    } catch (e: any) {
+      return callback(e, null);
+    }
+  };
 }

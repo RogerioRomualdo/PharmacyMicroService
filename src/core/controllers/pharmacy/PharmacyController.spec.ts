@@ -22,6 +22,10 @@ describe("Pharmacy Controller", () => {
       Promise<PharmacyEntity | Error>,
       [pharmacyId: string, products: Array<string>]
     >(),
+    unlinkProductFromAllPharmacies: jest.fn<
+      Promise<void>,
+      [productId: string]
+    >(),
   };
 
   const pharmacyController = new PharmacyController(MockPharmacyService);

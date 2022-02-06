@@ -18,6 +18,7 @@ describe("Pharmacy service", () => {
       Promise<PharmacyEntity | undefined>,
       [pharmacyId: string]
     >(),
+    countSubsidiariesOf: jest.fn<Promise<Number>, [headOfficeId: string]>(),
     create: jest.fn<Promise<Pharmacy>, [pharmacyData: PharmacyDTO]>(),
     update: jest.fn<
       Promise<Pharmacy>,
@@ -45,6 +46,10 @@ describe("Pharmacy service", () => {
     getAllProductsLinkedToPharmacy: jest.fn<
       Promise<Array<PharmacyProducts>>,
       [pharmacy: Pharmacy]
+    >(),
+    unlinkProductFromAllPharmacies: jest.fn<
+      Promise<void>,
+      [productId: string]
     >(),
   };
 
@@ -169,12 +174,22 @@ describe("Pharmacy service", () => {
 
     it("should return a pharmacy", async () => {
       MockPhramacyRepository.findById.mockReturnValue(
-        new Promise((resolve) => resolve(validPharmacy))
+        new Promise((resolve) =>
+          resolve({ ...validPharmacy, pharmacyProducts: [] })
+        )
+      );
+
+      MockProductClient.getProductsByIds.mockReturnValue(
+        new Promise((resolve) => resolve({ count: 0, products: [] }))
       );
 
       const pharmacy = await pharmacyService.show(validPharmacy.id);
 
-      expect(pharmacy).toEqual(validPharmacy);
+      expect(pharmacy).toEqual({
+        ...validPharmacy,
+        pharmacyProducts: [],
+        products: [],
+      });
       expect(MockPhramacyRepository.findById).toBeCalledTimes(1);
     });
 

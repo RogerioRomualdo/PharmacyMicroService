@@ -9,6 +9,7 @@ import { Pharmacy as PharmacyEntity } from "../../../infra/database/models/Pharm
 export interface IPharmacyRepository {
   index: (options: paginationOptions) => Promise<PharmacyList>;
   findById: (pharmacyId: string) => Promise<PharmacyEntity | undefined>;
+  countSubsidiariesOf: (headOfficeId: string) => Promise<Number>;
   create: (pharmacyData: PharmacyDTO) => Promise<Pharmacy>;
   update: (
     pharmacyId: string,
